@@ -7,6 +7,7 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import UpdateUserModal from "./UpdateUserModal.jsx";
+import { getTodaysHours } from "../utilities/utilities.js";
 
 export default function CallQueueList({
   callQueue,
@@ -56,12 +57,7 @@ export default function CallQueueList({
       headerName: "Today's Business Hours",
       width: 250,
       valueGetter: (value) => {
-        let currentDay = new Date().getDay();
-        for (let i = 0; i < value.length; i++) {
-          if (value[i].weekday === currentDay) {
-            return `${value[i].from} ~ ${value[i].to}`;
-          }
-        }
+        return getTodaysHours(value);
       },
     },
     {

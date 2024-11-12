@@ -31,6 +31,35 @@ export function getWorkday(value, row) {
   return workday;
 }
 
+export function getTodaysHours(value) {
+  let currentDay = new Date().getDay();
+  let from;
+  let to;
+  for (let i = 0; i < value.length; i++) {
+    if (value[i].weekday === currentDay) {
+      from = value[i].from;
+      to = value[i].to;
+    }
+  }
+  let newFrom = formatTime(from);
+  let newTo = formatTime(to);
+  return `${newFrom} ~ ${newTo}`;
+}
+
+function formatTime(time) {
+  let splitTime = time.split(":");
+  if (splitTime[0] > "12") {
+    splitTime[0] = (splitTime[0] - "12").toString();
+    splitTime[2] = "PM";
+    if (splitTime[0] < 10) {
+      splitTime[0] = "0" + splitTime[0];
+    }
+  } else {
+    splitTime[2] = "AM";
+  }
+  return `${splitTime[0]}:${splitTime[1]} ${splitTime[2]}`;
+}
+
 // Used to update the callQueueUsers state after updating business hours
 export async function updateCallQueueUserBusinessHours(callQueueUsers, hours) {
   let updatedCallQueueUsers = callQueueUsers;
