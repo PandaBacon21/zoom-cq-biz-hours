@@ -10,7 +10,7 @@ import RemoveCQUser from "./components/RemoveCQUser";
 export default function App() {
   // Listing and Selecting Call Queues to Show or Interact with
   const [callQueue, setCallQueue] = useState(); // name, id
-  const [callQueueUsers, setCallQueueUsers] = useState([]); // id, user_id, name, receive_call, extension_id, todays_hours, all_business_hours
+  const [callQueueUsers, setCallQueueUsers] = useState([]); // id, user_id, name, receive_call, extension_id, all_business_hours
 
   // Listing and Selecting User to Add to Queue
   const [listZoomUsers, setListZoomUsers] = useState([]);
@@ -83,6 +83,7 @@ export default function App() {
             <CallQueueList
               callQueue={callQueue}
               callQueueUsers={callQueueUsers}
+              setCallQueueUsers={setCallQueueUsers}
               rowSelectionModel={rowSelectionModel}
               setRowSelectionModel={setRowSelectionModel}
             />

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 
 import axios from "axios";
-import { parseTodaysHours } from "../utilities/utilities";
+// import { parseTodaysHours } from "../utilities/utilities";
 
 export default function RemoveCQUser({
   callQueue,
@@ -32,7 +32,7 @@ export default function RemoveCQUser({
       });
       let users = res.data;
       console.log(users);
-      users = await parseTodaysHours(users);
+      // users = await parseTodaysHours(users);
       setCallQueueUsers(users);
       setRowSelectionModel([]);
     } catch (e) {

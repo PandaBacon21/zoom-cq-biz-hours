@@ -11,7 +11,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { getDay, getWorkday } from "../utilities/utilities";
+import {
+  getDay,
+  getWorkday,
+  updateCallQueueUserBusinessHours,
+} from "../utilities/utilities";
+import axios from "axios";
 
 dayjs.extend(customParseFormat);
 
@@ -20,22 +25,80 @@ export default function UpdateUserModal({
   handleClose,
   selectedUser,
   currentHours,
-  setCurrentHours,
-  newHours,
-  setNewHours,
+  callQueueUsers,
+  setCallQueueUsers,
 }) {
+  const [newHours, setNewHours] = useState(null);
+
+  // Send updated hours to the backend to update Zoom
+  const updateUserBusinessHours = async () => {
+    try {
+      const res = await axios({
+        method: "patch",
+        url: "/api/updateBusinessHours",
+        params: { extension_id: selectedUser.extension_id },
+        data: {
+          business_hours: newHours,
+        },
+      });
+      let hours = res.data;
+      console.log(res.data);
+      console.log(hours.business_hours);
+      console.log(hours.extension_id);
+      updateCallQueueUserBusinessHours(callQueueUsers, hours);
+      handleClose();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // Handle change of time in the FROM column
   const handleFromChange = (newValue, params) => {
+    console.log(newValue);
+    console.log(params.row.id);
+
     let updatedHours = [...currentHours];
     let newTime = "";
     if (newValue.$H < 10) {
-      newTime = `0${newValue.$H}:${newValue.$m}:00`;
+      newTime = `0${newValue.$H}:`;
     } else {
-      newTime = `${newValue.$H}:${newValue.$m}:00`;
+      newTime = `${newValue.$H}:`;
     }
+    if (newValue.$m < 10) {
+      newTime = newTime + `0${newValue.$m}:00`;
+    } else {
+      newTime = newTime + `${newValue.$m}:00`;
+    }
+
     updatedHours[params.row.id].from = newTime;
-    console.log(updatedHours);
     setNewHours(updatedHours);
+    console.log(updatedHours);
   };
+
+  // Handle Change of time in the TO column (need to see if this can be conbined to a single function -- would need to be able to identify the column that changed )
+  const handleToChange = (newValue, params) => {
+    console.log(newValue);
+    console.log(params.row.id);
+
+    let updatedHours = [...currentHours];
+    let newTime = "";
+    if (newValue.$H < 10) {
+      newTime = `0${newValue.$H}:`;
+    } else {
+      newTime = `${newValue.$H}:`;
+    }
+    if (newValue.$m < 10) {
+      newTime = newTime + `0${newValue.$m}:00`;
+    } else {
+      newTime = newTime + `${newValue.$m}:00`;
+    }
+
+    updatedHours[params.row.id].to = newTime;
+    setNewHours(updatedHours);
+    console.log(updatedHours);
+  };
+
+  // Column details
   const columns = [
     {
       field: "weekday",
@@ -68,7 +131,10 @@ export default function UpdateUserModal({
       width: 180,
       renderCell: (params) => (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <TimePicker defaultValue={dayjs(params.row.to, "HH:mm:ss")} />
+          <TimePicker
+            defaultValue={dayjs(params.row.to, "HH:mm:ss")}
+            onChange={(newValue) => handleToChange(newValue, params)}
+          />
         </LocalizationProvider>
       ),
     },
@@ -100,15 +166,15 @@ export default function UpdateUserModal({
           <Typography variant="h3" gutterBottom>
             Weekly Business Hours
           </Typography>
-          {selectedUser === null ? (
-            <CircularProgress />
-          ) : (
+          {currentHours !== null ? (
             <DataGrid
               columns={columns}
               rows={currentHours}
               hideFooterPagination={true}
               hideFooterSelectedRowCount
             />
+          ) : (
+            <CircularProgress />
           )}
           <Button
             variant="outlined"
@@ -117,8 +183,12 @@ export default function UpdateUserModal({
           >
             Close
           </Button>
-          {newHours !== currentHours ? (
-            <Button variant="contained" sx={{ float: "right", margin: 1 }}>
+          {newHours ? (
+            <Button
+              variant="contained"
+              sx={{ float: "right", margin: 1 }}
+              onClick={updateUserBusinessHours}
+            >
               Update
             </Button>
           ) : null}

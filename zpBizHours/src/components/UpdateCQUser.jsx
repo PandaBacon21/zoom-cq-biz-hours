@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 
 import axios from "axios";
 
-import { parseTodaysHours } from "../utilities/utilities";
+// import { parseTodaysHours } from "../utilities/utilities";
 
 export default function UpdateCQUser({
   selectedUser,
@@ -24,7 +24,7 @@ export default function UpdateCQUser({
       });
       let users = res.data;
       // console.log(users);
-      users = await parseTodaysHours(users);
+      // users = await parseTodaysHours(users);
       setCallQueueUsers(users);
       setSelectedUser(false);
       // console.log(res.data);

@@ -1,44 +1,3 @@
-// Used to update weekday values to the name of the day
-export async function checkWeekDay(weekday) {
-  let day = "";
-  if (weekday === new Date().getDay() && weekday === 0) {
-    day = "Sunday";
-  } else if (weekday === new Date().getDay() && weekday === 1) {
-    day = "Monday";
-  } else if (weekday === new Date().getDay() && weekday === 2) {
-    day = "Tuesday";
-  } else if (weekday === new Date().getDay() && weekday === 3) {
-    day = "Wednesday";
-  } else if (weekday === new Date().getDay() && weekday === 4) {
-    day = "Thursday";
-  } else if (weekday === new Date().getDay() && weekday === 5) {
-    day = "Friday";
-  } else if (weekday === new Date().getDay() && weekday === 6) {
-    day = "Saturday";
-  } else {
-    console.log("Not a valid day");
-    return "Not a valid day";
-  }
-  return day;
-}
-// Used to display the day's business hours
-export async function parseTodaysHours(callQueueUsers) {
-  let users = callQueueUsers;
-  let weekday = await checkWeekDay(users[0].todays_hours.weekday);
-
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].todays_hours.from)
-      if (users[i].todays_hours.type === 0) {
-        users[i].todays_hours = `${weekday}: Not Working Today`;
-      } else {
-        users[
-          i
-        ].todays_hours = `${weekday}: ${users[i].todays_hours.from} - ${users[i].todays_hours.to}`;
-      }
-  }
-  return users;
-}
-
 // Used in showing/updating business hours modal
 export function getDay(value, row) {
   let day = "";
@@ -70,4 +29,16 @@ export function getWorkday(value, row) {
     return workday;
   }
   return workday;
+}
+
+// Used to update the callQueueUsers state after updating business hours
+export async function updateCallQueueUserBusinessHours(callQueueUsers, hours) {
+  let updatedCallQueueUsers = callQueueUsers;
+
+  for (let i = 0; i < updatedCallQueueUsers.length; i++) {
+    if (updatedCallQueueUsers[i].extension_id === hours.extension_id) {
+      updatedCallQueueUsers[i].all_business_hours = hours.business_hours;
+    }
+  }
+  return updatedCallQueueUsers;
 }

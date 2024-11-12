@@ -9,6 +9,7 @@ import {
   removeCallQueueUsers,
   updateCallQueueUsers,
   getBusinessHours,
+  updateBusinessHours,
 } from "./zoom.js";
 
 const app = express();
@@ -71,10 +72,24 @@ app.get("/api/getUsers", express.json(), async (req, res) => {
 });
 
 app.get("/api/getBusinessHours", express.json(), async (req, res) => {
-  console.log("Endpoing: getBusinessHours");
-  let extensionId = req.query.extensionId;
+  console.log("Endpoint: getBusinessHours");
+  const extensionId = req.query.extension_id;
   const access_token = await getAccessToken();
   const businessHours = await getBusinessHours(access_token, extensionId);
 
   res.send(businessHours);
+});
+
+app.patch("/api/updateBusinessHours", express.json(), async (req, res) => {
+  console.log("Endpoint: updateBusinessHours");
+  const extensionId = req.query.extension_id;
+  const businessHours = req.body.business_hours;
+  console.log({ extensionId: extensionId, businessHours: businessHours });
+  const access_token = await getAccessToken();
+  const newBusinessHours = await updateBusinessHours(
+    access_token,
+    extensionId,
+    businessHours
+  );
+  res.send(newBusinessHours);
 });

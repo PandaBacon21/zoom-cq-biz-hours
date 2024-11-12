@@ -76,7 +76,7 @@ export async function getCallQueueUsers(access_token, call_queue_id) {
     headers: createHeader(access_token),
   });
   for (let i = 0; i < res.data.call_queue_members.length; i++) {
-    let allBusinessHours = await getUserBusinessHours(
+    let allBusinessHours = await getBusinessHours(
       access_token,
       res.data.call_queue_members[i].extension_id
     );
@@ -88,7 +88,6 @@ export async function getCallQueueUsers(access_token, call_queue_id) {
       receive_call: res.data.call_queue_members[i].receive_call ? "On" : "Off",
       extension_id: res.data.call_queue_members[i].extension_id,
       all_business_hours: allBusinessHours.business_hours,
-      todays_hours: allBusinessHours.todays_hours,
     });
   }
   return callQueueUsers;
@@ -136,7 +135,6 @@ export async function removeCallQueueUsers(access_token, call_queue_id, users) {
 }
 
 // NEED TO UPDATE TO NOT CHECK FOR BIZ HOURS JUST TO POPULATE THE USERS
-
 export async function getUsers(access_token, call_queue_id) {
   console.log("Retrieving Users");
   let zoomUsers = [];
@@ -163,37 +161,6 @@ export async function getUsers(access_token, call_queue_id) {
 }
 
 // NEED TO ACCOUNT FOR 24/7 HOURS
-
-async function getUserBusinessHours(access_token, extension_id) {
-  console.log(`Retreiving Business Hours for Extension: ${extension_id}`);
-  let res = await axios({
-    method: "get",
-    url: `${zoomAPI}/phone/extension/${extension_id}/call_handling/settings`,
-    headers: createHeader(access_token),
-  });
-  let businessHours = res.data.business_hours[0].settings.custom_hours_settings;
-  // console.log(businessHours);
-  let adjustedBusinessHours = businessHours;
-  let currentDay = new Date().getDay();
-  let todaysHours = {};
-  for (let i = 0; i < adjustedBusinessHours.length; i++) {
-    adjustedBusinessHours[i].weekday = adjustedBusinessHours[i].weekday - 1;
-    adjustedBusinessHours[i].id = adjustedBusinessHours[i].weekday;
-    adjustedBusinessHours[i].from = adjustedBusinessHours[i].from + ":00";
-    adjustedBusinessHours[i].to = adjustedBusinessHours[i].to + ":00";
-    if (adjustedBusinessHours[i].weekday === currentDay) {
-      todaysHours = adjustedBusinessHours[i];
-    }
-  }
-  // console.log(adjustedBusinessHours);
-  // console.log(todaysHours);
-  let allBusinessHours = {
-    todays_hours: todaysHours,
-    business_hours: adjustedBusinessHours,
-  };
-  return allBusinessHours;
-}
-
 export async function getBusinessHours(access_token, extension_id) {
   console.log(`Retreiving Business Hours for Extension: ${extension_id}`);
   let res = await axios({
@@ -211,7 +178,51 @@ export async function getBusinessHours(access_token, extension_id) {
     adjustedBusinessHours[i].to = adjustedBusinessHours[i].to + ":00";
   }
   const allBusinessHours = {
+    extension_id: extension_id,
     business_hours: adjustedBusinessHours,
   };
   return allBusinessHours;
+}
+
+// FINISH HANDLING STRIPPING THE :00 OFF THE END OF EACH TIME IN ORDER TO SUBMIT TO API
+export async function updateBusinessHours(
+  access_token,
+  extension_id,
+  business_hours
+) {
+  console.log(`Updating Business Hours for Extension: ${extension_id}`);
+  let adjustedBusinessHours = business_hours;
+  for (let i = 0; i < adjustedBusinessHours.length; i++) {
+    delete adjustedBusinessHours[i].id;
+    adjustedBusinessHours[i].weekday = adjustedBusinessHours[i].weekday + 1;
+    const splitFrom = adjustedBusinessHours[i].from.split(":");
+    const updatedFrom = `${splitFrom[0]}:${splitFrom[1]}`;
+    const splitTo = adjustedBusinessHours[i].to.split(":");
+    const updatedTo = `${splitTo[0]}:${splitTo[1]}`;
+    adjustedBusinessHours[i].from = updatedFrom;
+    adjustedBusinessHours[i].to = updatedTo;
+  }
+  console.log(adjustedBusinessHours);
+  let res = await axios({
+    method: "patch",
+    url: `${zoomAPI}/phone/extension/${extension_id}/call_handling/settings/business_hours`,
+    headers: createHeader(access_token),
+    data: {
+      settings: {
+        custom_hours_settings: adjustedBusinessHours,
+        type: 2,
+      },
+      sub_setting_type: "custom_hours",
+    },
+  });
+  console.log(res.status);
+  if (res.status === 204) {
+    const newBusinessHours = await getBusinessHours(access_token, extension_id);
+    console.log("New Hours");
+    console.log(newBusinessHours);
+    return newBusinessHours;
+  } else {
+    console.log("error:");
+    console.log(res.status);
+  }
 }

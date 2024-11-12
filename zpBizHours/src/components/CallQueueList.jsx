@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import { Box, Typography, Paper, CircularProgress } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
@@ -10,13 +11,13 @@ import UpdateUserModal from "./UpdateUserModal.jsx";
 export default function CallQueueList({
   callQueue,
   callQueueUsers,
+  setCallQueueUsers,
   rowSelectionModel,
   setRowSelectionModel,
 }) {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
-  const [newHours, setNewHours] = useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -25,19 +26,43 @@ export default function CallQueueList({
     setOpen(false);
     setSelectedUser(null);
     setCurrentHours(null);
-    setNewHours(null);
   };
+  useEffect(() => {
+    const getUserBusinessHours = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: "/api/getBusinessHours",
+          params: { extension_id: selectedUser.extension_id },
+        });
+        let hours = res.data;
+        setCurrentHours(hours.business_hours);
+        console.log(hours.business_hours);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    if (selectedUser !== null) {
+      getUserBusinessHours();
+    }
+  }, [selectedUser]);
 
   // NEED TO UPDATE TO USER valueGetter rather than the complexity I have changing business hours and today's hours...
-
   const columns = [
-    // { field: "id", headerName: "Index", width: 200 },
     { field: "name", headerName: "User Name", width: 250 },
     { field: "receive_call", headerName: "Receive Call Status", width: 250 },
     {
-      field: "todays_hours",
-      headerName: "Business Hours",
+      field: "all_business_hours",
+      headerName: "Today's Business Hours",
       width: 250,
+      valueGetter: (value) => {
+        let currentDay = new Date().getDay();
+        for (let i = 0; i < value.length; i++) {
+          if (value[i].weekday === currentDay) {
+            return `${value[i].from} ~ ${value[i].to}`;
+          }
+        }
+      },
     },
     {
       field: "actions",
@@ -50,9 +75,7 @@ export default function CallQueueList({
           onClick={() => {
             handleOpen();
             setSelectedUser(callQueueUsers[params.id - 1]);
-            setCurrentHours(callQueueUsers[params.id - 1].all_business_hours);
             console.log(callQueueUsers[params.id - 1]);
-            // console.log(callQueueUsers[params.id - 1].all_business_hours);
           }}
         />,
       ],
@@ -94,9 +117,8 @@ export default function CallQueueList({
           handleClose={handleClose}
           selectedUser={selectedUser}
           currentHours={currentHours}
-          setCurrentHours={setCurrentHours}
-          newHours={newHours}
-          setNewHours={setNewHours}
+          callQueueUsers={callQueueUsers}
+          setCallQueueUsers={setCallQueueUsers}
         />
       </Paper>
     </>
