@@ -15,12 +15,17 @@ export default function CallQueueList({
 }) {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [currentHours, setCurrentHours] = useState(null);
+  const [newHours, setNewHours] = useState(null);
 
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setSelectedUser(null);
+    setCurrentHours(null);
+    setNewHours(null);
   };
 
   // NEED TO UPDATE TO USER valueGetter rather than the complexity I have changing business hours and today's hours...
@@ -45,7 +50,9 @@ export default function CallQueueList({
           onClick={() => {
             handleOpen();
             setSelectedUser(callQueueUsers[params.id - 1]);
+            setCurrentHours(callQueueUsers[params.id - 1].all_business_hours);
             console.log(callQueueUsers[params.id - 1]);
+            // console.log(callQueueUsers[params.id - 1].all_business_hours);
           }}
         />,
       ],
@@ -54,7 +61,7 @@ export default function CallQueueList({
 
   return (
     <>
-      <Paper elevation={2} sx={{ width: "80%", height: "50%", margin: 2 }}>
+      <Paper elevation={2} sx={{ width: "85%", height: "50%", margin: 2 }}>
         <Typography
           variant="h2"
           fontWeight="bold"
@@ -86,6 +93,10 @@ export default function CallQueueList({
           open={open}
           handleClose={handleClose}
           selectedUser={selectedUser}
+          currentHours={currentHours}
+          setCurrentHours={setCurrentHours}
+          newHours={newHours}
+          setNewHours={setNewHours}
         />
       </Paper>
     </>

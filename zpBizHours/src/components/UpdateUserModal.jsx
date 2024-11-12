@@ -1,17 +1,54 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Modal,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { getDay, getWorkday } from "../utilities/utilities";
 
 dayjs.extend(customParseFormat);
 
-export default function UpdateUserModal({ open, handleClose, selectedUser }) {
-  const [value, setValue] = useState("");
+export default function UpdateUserModal({
+  open,
+  handleClose,
+  selectedUser,
+  currentHours,
+  setCurrentHours,
+  newHours,
+  setNewHours,
+}) {
+  const handleFromChange = (newValue, params) => {
+    let updatedHours = [...currentHours];
+    let newTime = "";
+    if (newValue.$H < 10) {
+      newTime = `0${newValue.$H}:${newValue.$m}:00`;
+    } else {
+      newTime = `${newValue.$H}:${newValue.$m}:00`;
+    }
+    updatedHours[params.row.id].from = newTime;
+    console.log(updatedHours);
+    setNewHours(updatedHours);
+  };
   const columns = [
-    { field: "day", headerName: "Day", width: 120 },
+    {
+      field: "weekday",
+      headerName: "Day",
+      width: 120,
+      valueGetter: getDay,
+    },
+    {
+      field: "type",
+      headerName: "Workday",
+      width: 120,
+      valueGetter: getWorkday,
+    },
     {
       field: "from",
       headerName: "From",
@@ -19,9 +56,8 @@ export default function UpdateUserModal({ open, handleClose, selectedUser }) {
       renderCell: (params) => (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimePicker
-            label="from"
-            value={dayjs(selectedUser.all_business_hours.from, "HH:mm:ss")}
-            onChange={(newValue) => setValue(newValue)}
+            defaultValue={dayjs(params.row.from, "HH:mm:ss")}
+            onChange={(newValue) => handleFromChange(newValue, params)}
           />
         </LocalizationProvider>
       ),
@@ -32,26 +68,12 @@ export default function UpdateUserModal({ open, handleClose, selectedUser }) {
       width: 180,
       renderCell: (params) => (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <TimePicker
-            label="to"
-            defaultValue={dayjs(
-              selectedUser.all_business_hours[params.id].to,
-              "HH:mm:ss"
-            )}
-          />
+          <TimePicker defaultValue={dayjs(params.row.to, "HH:mm:ss")} />
         </LocalizationProvider>
       ),
     },
   ];
-  const rows = [
-    { id: 0, day: "Sunday", from: "08:00", to: "15:00" },
-    { id: 1, day: "Monday", from: "08:00", to: "15:00" },
-    { id: 2, day: "Tuesday", from: "08:00", to: "15:00" },
-    { id: 3, day: "Wednesday", from: "08:00", to: "15:00" },
-    { id: 4, day: "Thursday", from: "08:00", to: "15:00" },
-    { id: 5, day: "Friday", from: "08:00", to: "15:00" },
-    { id: 6, day: "Saturday", from: "08:00", to: "15:00" },
-  ];
+
   return (
     <>
       <Modal
@@ -66,7 +88,7 @@ export default function UpdateUserModal({ open, handleClose, selectedUser }) {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 600,
+            width: 700,
             height: "auto",
             bgcolor: "background.paper",
             border: "2px solid #000",
@@ -75,16 +97,31 @@ export default function UpdateUserModal({ open, handleClose, selectedUser }) {
             textAlign: "center",
           }}
         >
-          <Typography variant="h3">Weekly Business Hours</Typography>
-          {selectedUser === null ? null : (
+          <Typography variant="h3" gutterBottom>
+            Weekly Business Hours
+          </Typography>
+          {selectedUser === null ? (
+            <CircularProgress />
+          ) : (
             <DataGrid
               columns={columns}
-              rows={selectedUser.all_business_hours}
+              rows={currentHours}
               hideFooterPagination={true}
-              checkboxSelection
+              hideFooterSelectedRowCount
             />
           )}
-          <Button onClick={handleClose}>Close</Button>
+          <Button
+            variant="outlined"
+            onClick={handleClose}
+            sx={{ float: "left", margin: 1 }}
+          >
+            Close
+          </Button>
+          {newHours !== currentHours ? (
+            <Button variant="contained" sx={{ float: "right", margin: 1 }}>
+              Update
+            </Button>
+          ) : null}
         </Box>
       </Modal>
     </>

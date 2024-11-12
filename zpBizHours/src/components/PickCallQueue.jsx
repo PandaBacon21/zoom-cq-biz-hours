@@ -40,7 +40,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
         params: { callQueueId: callQueue.id },
       });
       let users = res.data;
-      console.log(users);
+      // console.log(users);
       users = await parseTodaysHours(users);
       setCallQueueUsers(users);
     } catch (e) {
@@ -50,7 +50,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
 
   // Need to update to check if the call queue is already added
   const handleChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setCallQueue(event.target.value);
     fetchCallQueueUsers(event.target.value);
   };

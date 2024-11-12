@@ -8,10 +8,15 @@ import {
   getUsers,
   removeCallQueueUsers,
   updateCallQueueUsers,
+  getBusinessHours,
 } from "./zoom.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server listening on PORT: ${port}`);
+});
 
 app.get("/api/getCallQueues", express.json(), async (req, res) => {
   console.log("Endpoint: /api/getCallQueues");
@@ -65,6 +70,11 @@ app.get("/api/getUsers", express.json(), async (req, res) => {
   res.send(zoomUsers);
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on PORT: ${port}`);
+app.get("/api/getBusinessHours", express.json(), async (req, res) => {
+  console.log("Endpoing: getBusinessHours");
+  let extensionId = req.query.extensionId;
+  const access_token = await getAccessToken();
+  const businessHours = await getBusinessHours(access_token, extensionId);
+
+  res.send(businessHours);
 });

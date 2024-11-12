@@ -23,11 +23,11 @@ export default function UpdateCQUser({
         },
       });
       let users = res.data;
-      console.log(users);
+      // console.log(users);
       users = await parseTodaysHours(users);
       setCallQueueUsers(users);
       setSelectedUser(false);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (e) {
       console.log(e);
       setSelectedUser(false);

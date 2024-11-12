@@ -1,3 +1,4 @@
+// Used to update weekday values to the name of the day
 export async function checkWeekDay(weekday) {
   let day = "";
   if (weekday === new Date().getDay() && weekday === 0) {
@@ -15,16 +16,15 @@ export async function checkWeekDay(weekday) {
   } else if (weekday === new Date().getDay() && weekday === 6) {
     day = "Saturday";
   } else {
-    console.log("Incorrect Day of Week");
-    return "Incorrect Day of Week";
+    console.log("Not a valid day");
+    return "Not a valid day";
   }
   return day;
 }
-
+// Used to display the day's business hours
 export async function parseTodaysHours(callQueueUsers) {
   let users = callQueueUsers;
   let weekday = await checkWeekDay(users[0].todays_hours.weekday);
-  console.log(users[0].todays_hours.from);
 
   for (let i = 0; i < users.length; i++) {
     if (users[i].todays_hours.from)
@@ -37,4 +37,37 @@ export async function parseTodaysHours(callQueueUsers) {
       }
   }
   return users;
+}
+
+// Used in showing/updating business hours modal
+export function getDay(value, row) {
+  let day = "";
+  if (row.weekday === 0) {
+    day = "Sunday";
+  } else if (row.weekday === 1) {
+    day = "Monday";
+  } else if (row.weekday === 2) {
+    day = "Tuesday";
+  } else if (row.weekday === 3) {
+    day = "Wednesday";
+  } else if (row.weekday === 4) {
+    day = "Thursday";
+  } else if (row.weekday === 5) {
+    day = "Friday";
+  } else if (row.weekday === 6) {
+    day = "Saturday";
+  } else {
+    console.log("Not a valid day");
+    return "Not a valid day";
+  }
+  return day;
+}
+// Used in showing/updating business hours modal
+export function getWorkday(value, row) {
+  let workday = "Yes";
+  if (row.type === 0) {
+    workday = "No";
+    return workday;
+  }
+  return workday;
 }

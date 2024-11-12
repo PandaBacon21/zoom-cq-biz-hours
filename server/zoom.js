@@ -165,7 +165,7 @@ export async function getUsers(access_token, call_queue_id) {
 // NEED TO ACCOUNT FOR 24/7 HOURS
 
 async function getUserBusinessHours(access_token, extension_id) {
-  console.log("Retreiving Business Hours");
+  console.log(`Retreiving Business Hours for Extension: ${extension_id}`);
   let res = await axios({
     method: "get",
     url: `${zoomAPI}/phone/extension/${extension_id}/call_handling/settings`,
@@ -179,6 +179,8 @@ async function getUserBusinessHours(access_token, extension_id) {
   for (let i = 0; i < adjustedBusinessHours.length; i++) {
     adjustedBusinessHours[i].weekday = adjustedBusinessHours[i].weekday - 1;
     adjustedBusinessHours[i].id = adjustedBusinessHours[i].weekday;
+    adjustedBusinessHours[i].from = adjustedBusinessHours[i].from + ":00";
+    adjustedBusinessHours[i].to = adjustedBusinessHours[i].to + ":00";
     if (adjustedBusinessHours[i].weekday === currentDay) {
       todaysHours = adjustedBusinessHours[i];
     }
@@ -187,6 +189,28 @@ async function getUserBusinessHours(access_token, extension_id) {
   // console.log(todaysHours);
   let allBusinessHours = {
     todays_hours: todaysHours,
+    business_hours: adjustedBusinessHours,
+  };
+  return allBusinessHours;
+}
+
+export async function getBusinessHours(access_token, extension_id) {
+  console.log(`Retreiving Business Hours for Extension: ${extension_id}`);
+  let res = await axios({
+    method: "get",
+    url: `${zoomAPI}/phone/extension/${extension_id}/call_handling/settings`,
+    headers: createHeader(access_token),
+  });
+  const businessHours =
+    res.data.business_hours[0].settings.custom_hours_settings;
+  let adjustedBusinessHours = businessHours;
+  for (let i = 0; i < adjustedBusinessHours.length; i++) {
+    adjustedBusinessHours[i].weekday = adjustedBusinessHours[i].weekday - 1;
+    adjustedBusinessHours[i].id = adjustedBusinessHours[i].weekday;
+    adjustedBusinessHours[i].from = adjustedBusinessHours[i].from + ":00";
+    adjustedBusinessHours[i].to = adjustedBusinessHours[i].to + ":00";
+  }
+  const allBusinessHours = {
     business_hours: adjustedBusinessHours,
   };
   return allBusinessHours;
