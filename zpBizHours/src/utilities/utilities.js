@@ -31,6 +31,7 @@ export function getWorkday(value, row) {
   return workday;
 }
 
+// Format and display todays hours
 export function getTodaysHours(value) {
   let currentDay = new Date().getDay();
   let from;
@@ -46,6 +47,7 @@ export function getTodaysHours(value) {
   return `${newFrom} ~ ${newTo}`;
 }
 
+// Formats the time to display properly
 function formatTime(time) {
   let splitTime = time.split(":");
   if (splitTime[0] > "12") {
@@ -71,3 +73,32 @@ export async function updateCallQueueUserBusinessHours(callQueueUsers, hours) {
   }
   return updatedCallQueueUsers;
 }
+
+export function convertTime(newValue) {
+  let newTime = "";
+  if (newValue.$H < 10) {
+    newTime = `0${newValue.$H}:`;
+  } else {
+    newTime = `${newValue.$H}:`;
+  }
+  if (newValue.$m < 10) {
+    newTime = newTime + `0${newValue.$m}:00`;
+  } else {
+    newTime = newTime + `${newValue.$m}:00`;
+  }
+  return newTime;
+}
+
+// export async function applyHoursToAll(params, currentHours, setNewHours) {
+//   console.log(currentHours);
+//   console.log(params);
+//   let updatedHours = currentHours;
+//   let targetTo = params.row.to;
+//   let targetFrom = params.row.from;
+//   for (let i = 0; i < updatedHours.length; i++) {
+//     updatedHours[i].from = targetFrom;
+//     updatedHours[i].to = targetTo;
+//   }
+//   setNewHours(updatedHours);
+//   console.log(updatedHours);
+// }

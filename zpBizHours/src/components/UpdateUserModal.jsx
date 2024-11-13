@@ -5,13 +5,15 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import UpdateIcon from "@mui/icons-material/Update";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {
+  convertTime,
   getDay,
   getWorkday,
   updateCallQueueUserBusinessHours,
@@ -58,17 +60,7 @@ export default function UpdateUserModal({
     console.log(params.row.id);
 
     let updatedHours = [...currentHours];
-    let newTime = "";
-    if (newValue.$H < 10) {
-      newTime = `0${newValue.$H}:`;
-    } else {
-      newTime = `${newValue.$H}:`;
-    }
-    if (newValue.$m < 10) {
-      newTime = newTime + `0${newValue.$m}:00`;
-    } else {
-      newTime = newTime + `${newValue.$m}:00`;
-    }
+    let newTime = convertTime(newValue);
 
     updatedHours[params.row.id].from = newTime;
     setNewHours(updatedHours);
@@ -81,17 +73,7 @@ export default function UpdateUserModal({
     console.log(params.row.id);
 
     let updatedHours = [...currentHours];
-    let newTime = "";
-    if (newValue.$H < 10) {
-      newTime = `0${newValue.$H}:`;
-    } else {
-      newTime = `${newValue.$H}:`;
-    }
-    if (newValue.$m < 10) {
-      newTime = newTime + `0${newValue.$m}:00`;
-    } else {
-      newTime = newTime + `${newValue.$m}:00`;
-    }
+    let newTime = convertTime(newValue);
 
     updatedHours[params.row.id].to = newTime;
     setNewHours(updatedHours);
@@ -138,6 +120,21 @@ export default function UpdateUserModal({
         </LocalizationProvider>
       ),
     },
+    // {
+    //   field: "actions",
+    //   type: "actions",
+    //   headerName: "Apply to All",
+    //   width: 100,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<UpdateIcon color="primary" fontSize="large" />}
+    //       label="Apply Hours To All Days"
+    //       onClick={() => {
+    //         applyHoursToAll(params, currentHours, setNewHours);
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
 
   return (
@@ -154,7 +151,7 @@ export default function UpdateUserModal({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 700,
+            width: 710,
             height: "auto",
             bgcolor: "background.paper",
             border: "2px solid #000",

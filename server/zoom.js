@@ -14,18 +14,24 @@ function createHeader(accessToken) {
 }
 
 // Check if the token is more than 45 min old (Zoom toke will expire after 1 hour)
-function checkAccessTokenExpire() {
+function checkAccessTokenExpire(currentToken) {
   const currentTime = new Date();
   const timeDifference = currentTime.getTime() - currentToken.expires;
 
   // Return True if 45 min have passed since the last token was retrieved
-  return timeDifference >= 2700000;
+  const expired = timeDifference >= 2700000;
+
+  console.log(`Token Expired? : ${expired}`);
+  return expired;
 }
 
 // Check our current token or get a new one
 export async function getAccessToken() {
   console.log("Checking for Access Token");
-  if (currentToken.access_token === "" || checkAccessTokenExpire()) {
+  if (
+    currentToken.access_token === "" ||
+    checkAccessTokenExpire(currentToken)
+  ) {
     try {
       console.log("Retrieving new Access Token");
       let oauthToken = Buffer.from(
@@ -161,6 +167,7 @@ export async function getUsers(access_token, call_queue_id) {
 }
 
 // NEED TO ACCOUNT FOR 24/7 HOURS
+// Need to account for if the Call Queue doesn't allow for overriding hours. Cannot let them update user hours if the call queue doesn't allow for overriding hours
 export async function getBusinessHours(access_token, extension_id) {
   console.log(`Retreiving Business Hours for Extension: ${extension_id}`);
   let res = await axios({
@@ -184,7 +191,9 @@ export async function getBusinessHours(access_token, extension_id) {
   return allBusinessHours;
 }
 
-// FINISH HANDLING STRIPPING THE :00 OFF THE END OF EACH TIME IN ORDER TO SUBMIT TO API
+// Need to account for updating hours on days that are not workdays - we don't allow for updating if the day is not an active workday (type 2)
+// Need to account for updating if the day is a workday or not
+// Need to account for if the Call Queue doesn't allow for overriding hours. Cannot let them update user hours if the call queue doesn't allow for overriding hours
 export async function updateBusinessHours(
   access_token,
   extension_id,
