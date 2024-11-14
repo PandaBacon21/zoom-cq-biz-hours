@@ -2,8 +2,6 @@ import { Button } from "@mui/material";
 
 import axios from "axios";
 
-// import { parseTodaysHours } from "../utilities/utilities";
-
 export default function UpdateCQUser({
   selectedUser,
   setSelectedUser,
@@ -15,7 +13,7 @@ export default function UpdateCQUser({
       console.log("Adding: " + selectedUser.name);
       let res = await axios({
         method: "post",
-        url: "/api/updateCallQueueUser",
+        url: "/api/update-call-queue-user",
         data: {
           email: selectedUser.email,
           user_id: selectedUser.user_id,
@@ -23,8 +21,6 @@ export default function UpdateCQUser({
         },
       });
       let users = res.data;
-      // console.log(users);
-      // users = await parseTodaysHours(users);
       setCallQueueUsers(users);
       setSelectedUser(false);
       // console.log(res.data);

@@ -19,18 +19,18 @@ app.listen(port, () => {
   console.log(`Server listening on PORT: ${port}`);
 });
 
-app.get("/api/getCallQueues", express.json(), async (req, res) => {
-  console.log("Endpoint: /api/getCallQueues");
+app.get("/api/get-call-queues", express.json(), async (req, res) => {
+  console.log("Endpoint: /api/get-call-queues");
   const accessToken = await getAccessToken();
   const callQueues = await getCallQueues(accessToken);
 
   res.send(callQueues);
 });
 
-app.get("/api/getCallQueueUsers", express.json(), async (req, res) => {
+app.get("/api/get-call-queue-users", express.json(), async (req, res) => {
   var fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
   console.log(fullUrl);
-  console.log("Endpoint: /api/getCallQueueUsers");
+  console.log("Endpoint: /api/get-call-queue-users");
   let callQueueId = req.query.callQueueId;
   const access_token = await getAccessToken();
   const callQueueUsers = await getCallQueueUsers(access_token, callQueueId);
@@ -38,8 +38,8 @@ app.get("/api/getCallQueueUsers", express.json(), async (req, res) => {
   res.send(callQueueUsers);
 });
 
-app.post("/api/updateCallQueueUser", express.json(), async (req, res) => {
-  console.log("Endpoint: /api/updateCallQueueUser");
+app.post("/api/update-call-queue-user", express.json(), async (req, res) => {
+  console.log("Endpoint: /api/update-call-queue-user");
   let userToUpdate = { email: req.body.email, id: req.body.user_id };
   const access_token = await getAccessToken();
   const updatedCallQueue = await updateCallQueueUsers(
@@ -50,8 +50,8 @@ app.post("/api/updateCallQueueUser", express.json(), async (req, res) => {
   res.send(updatedCallQueue);
 });
 
-app.delete("/api/removeCallQueueUsers", express.json(), async (req, res) => {
-  console.log("Endpoint: /api/removeCallQueueUser");
+app.delete("/api/remove-call-queue-users", express.json(), async (req, res) => {
+  console.log("Endpoint: /api/remove-call-queue-user");
 
   const access_token = await getAccessToken();
   const updatedCallQueue = await removeCallQueueUsers(
@@ -62,8 +62,8 @@ app.delete("/api/removeCallQueueUsers", express.json(), async (req, res) => {
   res.send(updatedCallQueue);
 });
 
-app.get("/api/getUsers", express.json(), async (req, res) => {
-  console.log("Endpoint: /api/getUsers");
+app.get("/api/get-users", express.json(), async (req, res) => {
+  console.log("Endpoint: /api/get-users");
   let callQueueId = req.query.callQueueId;
   const access_token = await getAccessToken();
   const zoomUsers = await getUsers(access_token, callQueueId);
@@ -71,8 +71,8 @@ app.get("/api/getUsers", express.json(), async (req, res) => {
   res.send(zoomUsers);
 });
 
-app.get("/api/getBusinessHours", express.json(), async (req, res) => {
-  console.log("Endpoint: getBusinessHours");
+app.get("/api/get-business-hours", express.json(), async (req, res) => {
+  console.log("Endpoint: get-business-hours");
   const extensionId = req.query.extension_id;
   const access_token = await getAccessToken();
   const businessHours = await getBusinessHours(access_token, extensionId);
@@ -80,8 +80,8 @@ app.get("/api/getBusinessHours", express.json(), async (req, res) => {
   res.send(businessHours);
 });
 
-app.patch("/api/updateBusinessHours", express.json(), async (req, res) => {
-  console.log("Endpoint: updateBusinessHours");
+app.patch("/api/update-business-hours", express.json(), async (req, res) => {
+  console.log("Endpoint: update-business-hours");
   const extensionId = req.query.extension_id;
   const businessHours = req.body.business_hours;
   console.log({ extensionId: extensionId, businessHours: businessHours });

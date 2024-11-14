@@ -1,7 +1,6 @@
 import { Button } from "@mui/material";
 
 import axios from "axios";
-// import { parseTodaysHours } from "../utilities/utilities";
 
 export default function RemoveCQUser({
   callQueue,
@@ -20,11 +19,10 @@ export default function RemoveCQUser({
         }
       }
     }
-    // console.log(usersToRemove);
     try {
       const res = await axios({
         method: "delete",
-        url: "/api/removeCallQueueUsers",
+        url: "/api/remove-call-queue-users",
         data: {
           call_queue_id: callQueue.id,
           users: usersToRemove,
@@ -32,7 +30,6 @@ export default function RemoveCQUser({
       });
       let users = res.data;
       console.log(users);
-      // users = await parseTodaysHours(users);
       setCallQueueUsers(users);
       setRowSelectionModel([]);
     } catch (e) {

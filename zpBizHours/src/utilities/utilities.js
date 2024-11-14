@@ -50,15 +50,21 @@ export function getTodaysHours(value) {
 // Formats the time to display properly
 function formatTime(time) {
   let splitTime = time.split(":");
-  if (splitTime[0] > "12") {
-    splitTime[0] = (splitTime[0] - "12").toString();
+  if (splitTime[0] >= "12") {
     splitTime[2] = "PM";
-    if (splitTime[0] < 10) {
-      splitTime[0] = "0" + splitTime[0];
-    }
   } else {
     splitTime[2] = "AM";
   }
+  if (splitTime[0] > "12") {
+    splitTime[0] = (splitTime[0] - "12").toString();
+  }
+  if (splitTime[0] < "10" && splitTime[0] !== "00") {
+    splitTime[0] = splitTime[0].substring(1);
+  }
+  if (splitTime[0] === "00") {
+    splitTime[0] = "12";
+  }
+
   return `${splitTime[0]}:${splitTime[1]} ${splitTime[2]}`;
 }
 
@@ -88,17 +94,3 @@ export function convertTime(newValue) {
   }
   return newTime;
 }
-
-// export async function applyHoursToAll(params, currentHours, setNewHours) {
-//   console.log(currentHours);
-//   console.log(params);
-//   let updatedHours = currentHours;
-//   let targetTo = params.row.to;
-//   let targetFrom = params.row.from;
-//   for (let i = 0; i < updatedHours.length; i++) {
-//     updatedHours[i].from = targetFrom;
-//     updatedHours[i].to = targetTo;
-//   }
-//   setNewHours(updatedHours);
-//   console.log(updatedHours);
-// }

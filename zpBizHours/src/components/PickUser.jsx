@@ -26,7 +26,7 @@ export default function PickUser({
       setLoading(true);
       let res = await axios({
         method: "get",
-        url: "/api/getUsers",
+        url: "/api/get-users",
         params: {
           callQueueId: callQueue.id,
         },

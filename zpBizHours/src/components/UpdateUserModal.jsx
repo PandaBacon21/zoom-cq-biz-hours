@@ -5,8 +5,7 @@ import {
   Modal,
   Typography,
 } from "@mui/material";
-import UpdateIcon from "@mui/icons-material/Update";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
@@ -18,6 +17,7 @@ import {
   getWorkday,
   updateCallQueueUserBusinessHours,
 } from "../utilities/utilities";
+
 import axios from "axios";
 
 dayjs.extend(customParseFormat);
@@ -37,7 +37,7 @@ export default function UpdateUserModal({
     try {
       const res = await axios({
         method: "patch",
-        url: "/api/updateBusinessHours",
+        url: "/api/update-business-hours",
         params: { extension_id: selectedUser.extension_id },
         data: {
           business_hours: newHours,
@@ -120,21 +120,6 @@ export default function UpdateUserModal({
         </LocalizationProvider>
       ),
     },
-    // {
-    //   field: "actions",
-    //   type: "actions",
-    //   headerName: "Apply to All",
-    //   width: 100,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       icon={<UpdateIcon color="primary" fontSize="large" />}
-    //       label="Apply Hours To All Days"
-    //       onClick={() => {
-    //         applyHoursToAll(params, currentHours, setNewHours);
-    //       }}
-    //     />,
-    //   ],
-    // },
   ];
 
   return (

@@ -33,7 +33,7 @@ export default function CallQueueList({
       try {
         const res = await axios({
           method: "get",
-          url: "/api/getBusinessHours",
+          url: "/api/get-business-hours",
           params: { extension_id: selectedUser.extension_id },
         });
         let hours = res.data;
@@ -48,7 +48,6 @@ export default function CallQueueList({
     }
   }, [selectedUser]);
 
-  // NEED TO UPDATE TO USER valueGetter rather than the complexity I have changing business hours and today's hours...
   const columns = [
     { field: "name", headerName: "User Name", width: 250 },
     { field: "receive_call", headerName: "Receive Call Status", width: 250 },

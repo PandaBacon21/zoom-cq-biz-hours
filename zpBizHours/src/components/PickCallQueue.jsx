@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
-// import { parseTodaysHours } from "../utilities/utilities";
 
 export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
   const [loading, setLoading] = useState(false);
@@ -21,7 +20,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
       setLoading(true);
       let res = await axios({
         method: "get",
-        url: "/api/getCallQueues",
+        url: "/api/get-call-queues",
       });
       setAvailableQueue(res.data);
       // console.log(res.data);
@@ -36,12 +35,11 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
       setCallQueueUsers([]);
       const res = await axios({
         method: "get",
-        url: "/api/getCallQueueUsers",
+        url: "/api/get-call-queue-users",
         params: { callQueueId: callQueue.id },
       });
       let users = res.data;
       console.log(users);
-      // users = await parseTodaysHours(users);
       setCallQueueUsers(users);
     } catch (e) {
       console.log(e);
