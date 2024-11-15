@@ -29,6 +29,7 @@ export default function CallQueueList({
     setCurrentHours(null);
   };
   useEffect(() => {
+    // when selectedUser changes, call backed to retrieve selectedUser business hours
     const getUserBusinessHours = async () => {
       try {
         const res = await axios({
@@ -48,6 +49,7 @@ export default function CallQueueList({
     }
   }, [selectedUser]);
 
+  // Columns for datagrid
   const columns = [
     { field: "name", headerName: "User Name", width: 250 },
     { field: "receive_call", headerName: "Receive Call Status", width: 250 },

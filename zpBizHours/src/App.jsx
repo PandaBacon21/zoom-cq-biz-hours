@@ -8,6 +8,8 @@ import UpdateCQUser from "./components/UpdateCQUser";
 import RemoveCQUser from "./components/RemoveCQUser";
 
 export default function App() {
+  // Need to update these to Context rather than prop drilling all the state
+
   // Listing and Selecting Call Queues to Show or Interact with
   const [callQueue, setCallQueue] = useState(); // name, id
   const [callQueueUsers, setCallQueueUsers] = useState([]); // id, user_id, name, receive_call, extension_id, all_business_hours

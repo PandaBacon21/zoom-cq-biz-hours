@@ -15,6 +15,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
   const [loading, setLoading] = useState(false);
   const [availableQueue, setAvailableQueue] = useState([]);
 
+  // when picker is opened, call backed to get a list of queues to choose from
   const handleOpen = async (event) => {
     try {
       setLoading(true);
@@ -30,6 +31,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
     setLoading(false);
   };
 
+  // call backend to retrieve the most recent list of users in queue picked
   const fetchCallQueueUsers = async (callQueue) => {
     try {
       setCallQueueUsers([]);
@@ -46,9 +48,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
     }
   };
 
-  // Need to update to check if the call queue is already added
   const handleChange = (event) => {
-    // console.log(event.target.value);
     setCallQueue(event.target.value);
     fetchCallQueueUsers(event.target.value);
   };

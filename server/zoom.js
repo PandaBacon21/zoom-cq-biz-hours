@@ -6,6 +6,7 @@ const zoomAPI = "https://api.zoom.us/v2/";
 
 let currentToken = { access_token: "", expires: 0 };
 
+// Headers for Zoom API
 function createHeader(accessToken) {
   return {
     Authorization: `Bearer ${accessToken}`,
@@ -13,7 +14,7 @@ function createHeader(accessToken) {
   };
 }
 
-// Check if the token is more than 45 min old (Zoom toke will expire after 1 hour)
+// Check if the token is more than 45 min old (Zoom toke will expire after 1 hour) - Not working all the time...
 function checkAccessTokenExpire(currentToken) {
   const currentTime = new Date();
   const timeDifference = currentTime.getTime() - currentToken.expires;
@@ -56,6 +57,7 @@ export async function getAccessToken() {
   }
 }
 
+// Get call queues for Queue Picker
 export async function getCallQueues(access_token) {
   console.log("Retrieving Call Queues");
   let callQueues = [];
@@ -73,6 +75,7 @@ export async function getCallQueues(access_token) {
   return callQueues;
 }
 
+// Get users for specific call queue to display on queue list
 export async function getCallQueueUsers(access_token, call_queue_id) {
   console.log(`Retrieving Users for Call Queue ${call_queue_id}`);
   let callQueueUsers = [];
@@ -99,6 +102,7 @@ export async function getCallQueueUsers(access_token, call_queue_id) {
   return callQueueUsers;
 }
 
+// Update call queue to add new member from update cq user
 export async function updateCallQueueUsers(access_token, call_queue_id, user) {
   let res = await axios({
     method: "post",
@@ -123,6 +127,7 @@ export async function updateCallQueueUsers(access_token, call_queue_id, user) {
   return updatedCallQueueUsers;
 }
 
+// remove user from specific call queue from remove cq user
 export async function removeCallQueueUsers(access_token, call_queue_id, users) {
   const headers = createHeader(access_token);
   for (let i = 0; i < users.length; i++) {
@@ -140,6 +145,7 @@ export async function removeCallQueueUsers(access_token, call_queue_id, users) {
   return updatedCallQueueUsers;
 }
 
+// get users to list in pick user - to add user to call queues
 // NEED TO UPDATE TO NOT CHECK FOR BIZ HOURS JUST TO POPULATE THE USERS
 export async function getUsers(access_token, call_queue_id) {
   console.log("Retrieving Users");
@@ -166,6 +172,7 @@ export async function getUsers(access_token, call_queue_id) {
   return zoomUsers;
 }
 
+// get the business hours of a specific user
 // NEED TO ACCOUNT FOR 24/7 HOURS
 // Need to account for if the Call Queue doesn't allow for overriding hours. Cannot let them update user hours if the call queue doesn't allow for overriding hours
 export async function getBusinessHours(access_token, extension_id) {
@@ -190,6 +197,8 @@ export async function getBusinessHours(access_token, extension_id) {
   };
   return allBusinessHours;
 }
+
+// update the business hours from update user modal - some issues to address
 
 // Need to account for updating hours on days that are not workdays - we don't allow for updating if the day is not an active workday (type 2)
 // Need to account for updating if the day is a workday or not

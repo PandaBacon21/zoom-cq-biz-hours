@@ -28,7 +28,6 @@ export default function UpdateUserModal({
   selectedUser,
   currentHours,
   callQueueUsers,
-  setCallQueueUsers,
 }) {
   const [newHours, setNewHours] = useState(null);
 
@@ -80,7 +79,7 @@ export default function UpdateUserModal({
     console.log(updatedHours);
   };
 
-  // Column details
+  // Columns for datagrid
   const columns = [
     {
       field: "weekday",

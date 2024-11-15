@@ -8,6 +8,7 @@ export default function UpdateCQUser({
   callQueue,
   setCallQueueUsers,
 }) {
+  // call backend to add selecteduser to queue
   const addUser = async () => {
     try {
       console.log("Adding: " + selectedUser.name);

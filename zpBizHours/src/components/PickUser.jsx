@@ -19,6 +19,7 @@ export default function PickUser({
   setSelectedUser,
 }) {
   const [loading, setLoading] = useState(false);
+
   // Open Select to pick a new user
   const handleOpen = async (event) => {
     try {
