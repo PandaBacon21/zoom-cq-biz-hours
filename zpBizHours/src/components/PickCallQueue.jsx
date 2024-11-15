@@ -19,7 +19,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
   const handleOpen = async (event) => {
     try {
       setLoading(true);
-      let res = await axios({
+      const res = await axios({
         method: "get",
         url: "/api/get-call-queues",
       });
@@ -40,7 +40,7 @@ export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
         url: "/api/get-call-queue-users",
         params: { callQueueId: callQueue.id },
       });
-      let users = res.data;
+      const users = res.data;
       console.log(users);
       setCallQueueUsers(users);
     } catch (e) {

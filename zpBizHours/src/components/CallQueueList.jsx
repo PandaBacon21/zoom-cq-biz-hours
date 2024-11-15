@@ -37,7 +37,7 @@ export default function CallQueueList({
           url: "/api/get-business-hours",
           params: { extension_id: selectedUser.extension_id },
         });
-        let hours = res.data;
+        const hours = res.data;
         setCurrentHours(hours.business_hours);
         console.log(hours.business_hours);
       } catch (e) {

@@ -11,7 +11,7 @@ export default function RemoveCQUser({
 }) {
   // set the list of users to remove, then call backend to remove those users from the target queue
   const removeUser = async () => {
-    let usersToRemove = [];
+    const usersToRemove = [];
     for (let index = 0; index < rowSelectionModel.length; index++) {
       for (let i = 0; i < callQueueUsers.length; i++) {
         if (rowSelectionModel[index] === callQueueUsers[i].id) {
@@ -29,7 +29,7 @@ export default function RemoveCQUser({
           users: usersToRemove,
         },
       });
-      let users = res.data;
+      const users = res.data;
       console.log(users);
       setCallQueueUsers(users);
       setRowSelectionModel([]);

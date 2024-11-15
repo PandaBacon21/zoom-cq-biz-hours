@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 const zoomAuth = "https://zoom.us/oauth/";
 const zoomAPI = "https://api.zoom.us/v2/";
 
-let currentToken = { access_token: "", expires: 0 };
+const currentToken = { access_token: "", expires: 0 };
 
 // Headers for Zoom API
 function createHeader(accessToken) {
@@ -60,8 +60,8 @@ export async function getAccessToken() {
 // Get call queues for Queue Picker
 export async function getCallQueues(access_token) {
   console.log("Retrieving Call Queues");
-  let callQueues = [];
-  let res = await axios({
+  const callQueues = [];
+  const res = await axios({
     method: "get",
     url: `${zoomAPI}/phone/call_queues`,
     headers: createHeader(access_token),
@@ -78,14 +78,14 @@ export async function getCallQueues(access_token) {
 // Get users for specific call queue to display on queue list
 export async function getCallQueueUsers(access_token, call_queue_id) {
   console.log(`Retrieving Users for Call Queue ${call_queue_id}`);
-  let callQueueUsers = [];
-  let res = await axios({
+  const callQueueUsers = [];
+  const res = await axios({
     method: "get",
     url: `${zoomAPI}/phone/call_queues/${call_queue_id}/members`,
     headers: createHeader(access_token),
   });
   for (let i = 0; i < res.data.call_queue_members.length; i++) {
-    let allBusinessHours = await getBusinessHours(
+    const allBusinessHours = await getBusinessHours(
       access_token,
       res.data.call_queue_members[i].extension_id
     );
@@ -104,7 +104,7 @@ export async function getCallQueueUsers(access_token, call_queue_id) {
 
 // Update call queue to add new member from update cq user
 export async function updateCallQueueUsers(access_token, call_queue_id, user) {
-  let res = await axios({
+  const res = await axios({
     method: "post",
     url: `${zoomAPI}/phone/call_queues/${call_queue_id}/members`,
     headers: createHeader(access_token),
@@ -120,7 +120,7 @@ export async function updateCallQueueUsers(access_token, call_queue_id, user) {
     },
   });
   console.log("Update Call Queue Members Status: " + res.status);
-  let updatedCallQueueUsers = await getCallQueueUsers(
+  const updatedCallQueueUsers = await getCallQueueUsers(
     access_token,
     call_queue_id
   );
@@ -131,14 +131,14 @@ export async function updateCallQueueUsers(access_token, call_queue_id, user) {
 export async function removeCallQueueUsers(access_token, call_queue_id, users) {
   const headers = createHeader(access_token);
   for (let i = 0; i < users.length; i++) {
-    let res = await axios({
+    const res = await axios({
       method: "delete",
       url: `${zoomAPI}/phone/call_queues/${call_queue_id}/members/${users[i]}`,
       headers: headers,
     });
     console.log(`Removed User ${users[i]} from Call Queue ${call_queue_id}`);
   }
-  let updatedCallQueueUsers = await getCallQueueUsers(
+  const updatedCallQueueUsers = await getCallQueueUsers(
     access_token,
     call_queue_id
   );
@@ -149,14 +149,14 @@ export async function removeCallQueueUsers(access_token, call_queue_id, users) {
 // NEED TO UPDATE TO NOT CHECK FOR BIZ HOURS JUST TO POPULATE THE USERS
 export async function getUsers(access_token, call_queue_id) {
   console.log("Retrieving Users");
-  let zoomUsers = [];
-  let res = await axios({
+  const zoomUsers = [];
+  const res = await axios({
     method: "get",
     url: `${zoomAPI}/phone/users`,
     headers: createHeader(access_token),
   });
-  let currentCQUsers = await getCallQueueUsers(access_token, call_queue_id);
-  let currentCQUsersIds = [];
+  const currentCQUsers = await getCallQueueUsers(access_token, call_queue_id);
+  const currentCQUsersIds = [];
   for (let i = 0; i < currentCQUsers.length; i++) {
     currentCQUsersIds.push(currentCQUsers[i].user_id);
   }
@@ -177,14 +177,14 @@ export async function getUsers(access_token, call_queue_id) {
 // Need to account for if the Call Queue doesn't allow for overriding hours. Cannot let them update user hours if the call queue doesn't allow for overriding hours
 export async function getBusinessHours(access_token, extension_id) {
   console.log(`Retreiving Business Hours for Extension: ${extension_id}`);
-  let res = await axios({
+  const res = await axios({
     method: "get",
     url: `${zoomAPI}/phone/extension/${extension_id}/call_handling/settings`,
     headers: createHeader(access_token),
   });
   const businessHours =
     res.data.business_hours[0].settings.custom_hours_settings;
-  let adjustedBusinessHours = businessHours;
+  const adjustedBusinessHours = businessHours;
   for (let i = 0; i < adjustedBusinessHours.length; i++) {
     adjustedBusinessHours[i].weekday = adjustedBusinessHours[i].weekday - 1;
     adjustedBusinessHours[i].id = adjustedBusinessHours[i].weekday;
@@ -209,7 +209,7 @@ export async function updateBusinessHours(
   business_hours
 ) {
   console.log(`Updating Business Hours for Extension: ${extension_id}`);
-  let adjustedBusinessHours = business_hours;
+  const adjustedBusinessHours = business_hours;
   for (let i = 0; i < adjustedBusinessHours.length; i++) {
     delete adjustedBusinessHours[i].id;
     adjustedBusinessHours[i].weekday = adjustedBusinessHours[i].weekday + 1;
@@ -221,7 +221,7 @@ export async function updateBusinessHours(
     adjustedBusinessHours[i].to = updatedTo;
   }
   console.log(adjustedBusinessHours);
-  let res = await axios({
+  const res = await axios({
     method: "patch",
     url: `${zoomAPI}/phone/extension/${extension_id}/call_handling/settings/business_hours`,
     headers: createHeader(access_token),

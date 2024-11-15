@@ -33,7 +33,7 @@ export function getWorkday(value, row) {
 
 // Format and display todays hours
 export function getTodaysHours(value) {
-  let currentDay = new Date().getDay();
+  const currentDay = new Date().getDay();
   let from;
   let to;
   for (let i = 0; i < value.length; i++) {
@@ -42,8 +42,8 @@ export function getTodaysHours(value) {
       to = value[i].to;
     }
   }
-  let newFrom = formatTime(from);
-  let newTo = formatTime(to);
+  const newFrom = formatTime(from);
+  const newTo = formatTime(to);
   return `${newFrom} ~ ${newTo}`;
 }
 

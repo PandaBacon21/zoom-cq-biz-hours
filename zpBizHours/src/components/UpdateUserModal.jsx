@@ -42,7 +42,7 @@ export default function UpdateUserModal({
           business_hours: newHours,
         },
       });
-      let hours = res.data;
+      const hours = res.data;
       console.log(res.data);
       console.log(hours.business_hours);
       console.log(hours.extension_id);
@@ -58,8 +58,8 @@ export default function UpdateUserModal({
     console.log(newValue);
     console.log(params.row.id);
 
-    let updatedHours = [...currentHours];
-    let newTime = convertTime(newValue);
+    const updatedHours = [...currentHours];
+    const newTime = convertTime(newValue);
 
     updatedHours[params.row.id].from = newTime;
     setNewHours(updatedHours);
@@ -71,8 +71,8 @@ export default function UpdateUserModal({
     console.log(newValue);
     console.log(params.row.id);
 
-    let updatedHours = [...currentHours];
-    let newTime = convertTime(newValue);
+    const updatedHours = [...currentHours];
+    const newTime = convertTime(newValue);
 
     updatedHours[params.row.id].to = newTime;
     setNewHours(updatedHours);

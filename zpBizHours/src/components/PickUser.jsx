@@ -25,7 +25,7 @@ export default function PickUser({
     try {
       setSelectedUser(false);
       setLoading(true);
-      let res = await axios({
+      const res = await axios({
         method: "get",
         url: "/api/get-users",
         params: {

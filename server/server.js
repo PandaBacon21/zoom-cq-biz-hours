@@ -28,10 +28,10 @@ app.get("/api/get-call-queues", express.json(), async (req, res) => {
 });
 
 app.get("/api/get-call-queue-users", express.json(), async (req, res) => {
-  var fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
-  console.log(fullUrl);
+  // const fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+  // console.log(fullUrl);
   console.log("Endpoint: /api/get-call-queue-users");
-  let callQueueId = req.query.callQueueId;
+  const callQueueId = req.query.callQueueId;
   const access_token = await getAccessToken();
   const callQueueUsers = await getCallQueueUsers(access_token, callQueueId);
 
@@ -40,7 +40,7 @@ app.get("/api/get-call-queue-users", express.json(), async (req, res) => {
 
 app.post("/api/update-call-queue-user", express.json(), async (req, res) => {
   console.log("Endpoint: /api/update-call-queue-user");
-  let userToUpdate = { email: req.body.email, id: req.body.user_id };
+  const userToUpdate = { email: req.body.email, id: req.body.user_id };
   const access_token = await getAccessToken();
   const updatedCallQueue = await updateCallQueueUsers(
     access_token,
@@ -64,7 +64,7 @@ app.delete("/api/remove-call-queue-users", express.json(), async (req, res) => {
 
 app.get("/api/get-users", express.json(), async (req, res) => {
   console.log("Endpoint: /api/get-users");
-  let callQueueId = req.query.callQueueId;
+  const callQueueId = req.query.callQueueId;
   const access_token = await getAccessToken();
   const zoomUsers = await getUsers(access_token, callQueueId);
 

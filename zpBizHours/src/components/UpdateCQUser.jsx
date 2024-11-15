@@ -12,7 +12,7 @@ export default function UpdateCQUser({
   const addUser = async () => {
     try {
       console.log("Adding: " + selectedUser.name);
-      let res = await axios({
+      const res = await axios({
         method: "post",
         url: "/api/update-call-queue-user",
         data: {
@@ -21,7 +21,7 @@ export default function UpdateCQUser({
           call_queue_id: callQueue.id,
         },
       });
-      let users = res.data;
+      const users = res.data;
       setCallQueueUsers(users);
       setSelectedUser(false);
       // console.log(res.data);
