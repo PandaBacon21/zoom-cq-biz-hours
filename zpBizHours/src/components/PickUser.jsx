@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Typography,
@@ -7,23 +7,32 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  selectClasses,
 } from "@mui/material";
 
 import axios from "axios";
+import { CallQueueContext } from "../context/CallQueueContext";
+import { UserContext } from "../context/UserContext";
 
-export default function PickUser({
-  callQueue,
-  listZoomUsers,
-  setListZoomUsers,
-  selectedUser,
-  setSelectedUser,
-}) {
+export default function PickUser(
+  {
+    // callQueue,
+    // listZoomUsers,
+    // setListZoomUsers,
+    // selectedUser,
+    // setSelectedUser,
+  }
+) {
+  const { callQueue } = useContext(CallQueueContext);
+  const { listZoomUsers, setListZoomUsers, selectedUser, setSelectedUser } =
+    useContext(UserContext);
+
   const [loading, setLoading] = useState(false);
 
   // Open Select to pick a new user
   const handleOpen = async (event) => {
     try {
-      setSelectedUser(false);
+      setSelectedUser(null);
       setLoading(true);
       const res = await axios({
         method: "get",
@@ -33,7 +42,7 @@ export default function PickUser({
         },
       });
       setListZoomUsers(res.data);
-      // console.log(res.data);
+      console.log(res.data);
     } catch (e) {
       console.log(e);
     }

@@ -1,14 +1,22 @@
 import { Button } from "@mui/material";
 
 import axios from "axios";
+import { useContext } from "react";
+import { CallQueueContext } from "../context/CallQueueContext";
+import { UserContext } from "../context/UserContext";
 
-export default function RemoveCQUser({
-  callQueue,
-  callQueueUsers,
-  setCallQueueUsers,
-  rowSelectionModel,
-  setRowSelectionModel,
-}) {
+export default function RemoveCQUser(
+  {
+    // callQueue,
+    // callQueueUsers,
+    // setCallQueueUsers,
+    // rowSelectionModel,
+    // setRowSelectionModel,
+  }
+) {
+  const { callQueue, callQueueUsers, setCallQueueUsers } =
+    useContext(CallQueueContext);
+  const { rowSelectionModel, setRowSelectionModel } = useContext(UserContext);
   // set the list of users to remove, then call backend to remove those users from the target queue
   const removeUser = async () => {
     const usersToRemove = [];

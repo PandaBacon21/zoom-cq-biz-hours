@@ -1,3 +1,5 @@
+import { useContext, useState } from "react";
+
 import {
   Box,
   Button,
@@ -8,9 +10,9 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+
 import {
   convertTime,
   getDay,
@@ -19,16 +21,21 @@ import {
 } from "../utilities/utilities";
 
 import axios from "axios";
+import { CallQueueContext } from "../context/CallQueueContext";
+import { UserContext } from "../context/UserContext";
 
 dayjs.extend(customParseFormat);
 
 export default function UpdateUserModal({
   open,
   handleClose,
-  selectedUser,
+  // selectedUser,
   currentHours,
-  callQueueUsers,
+  // callQueueUsers,
 }) {
+  const { callQueueUsers } = useContext(CallQueueContext);
+  const { selectedUser } = useContext(UserContext);
+
   const [newHours, setNewHours] = useState(null);
 
   // Send updated hours to the backend to update Zoom

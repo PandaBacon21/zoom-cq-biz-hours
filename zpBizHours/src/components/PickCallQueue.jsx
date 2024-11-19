@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   FormControl,
@@ -10,8 +10,12 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
+import { CallQueueContext } from "../context/CallQueueContext";
 
-export default function PickCallQueue({ setCallQueue, setCallQueueUsers }) {
+export default function PickCallQueue() {
+  //{ setCallQueue, setCallQueueUsers }
+  const { setCallQueue, setCallQueueUsers } = useContext(CallQueueContext);
+
   const [loading, setLoading] = useState(false);
   const [availableQueue, setAvailableQueue] = useState([]);
 

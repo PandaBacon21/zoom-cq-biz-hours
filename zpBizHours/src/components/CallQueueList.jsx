@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 import { Box, Typography, Paper, CircularProgress } from "@mui/material";
@@ -8,19 +8,33 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import UpdateUserModal from "./UpdateUserModal.jsx";
 import { getTodaysHours } from "../utilities/utilities.js";
+import { CallQueueContext } from "../context/CallQueueContext.jsx";
+import { UserContext } from "../context/UserContext.jsx";
 
-export default function CallQueueList({
-  callQueue,
-  callQueueUsers,
-  setCallQueueUsers,
-  rowSelectionModel,
-  setRowSelectionModel,
-}) {
+export default function CallQueueList(
+  {
+    // callQueue,
+    // callQueueUsers,
+    // setCallQueueUsers,
+    // rowSelectionModel,
+    // setRowSelectionModel,
+  }
+) {
+  const { callQueue, callQueueUsers, setCallQueueUsers } =
+    useContext(CallQueueContext);
+  const {
+    selectedUser,
+    setSelectedUser,
+    rowSelectionModel,
+    setRowSelectionModel,
+  } = useContext(UserContext);
+
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  // const [selectedUser, setSelectedUser] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
 
   const handleOpen = () => {
+    // getUserBusinessHours();
     setOpen(true);
   };
   const handleClose = () => {
@@ -44,10 +58,10 @@ export default function CallQueueList({
         console.log(e);
       }
     };
-    if (selectedUser !== null) {
+    if (open !== false) {
       getUserBusinessHours();
     }
-  }, [selectedUser]);
+  }, [open]);
 
   // Columns for datagrid
   const columns = [
@@ -70,8 +84,8 @@ export default function CallQueueList({
           icon={<ManageAccountsIcon color="primary" fontSize="large" />}
           label="Update"
           onClick={() => {
-            handleOpen();
             setSelectedUser(callQueueUsers[params.id - 1]);
+            handleOpen();
             console.log(callQueueUsers[params.id - 1]);
           }}
         />,
@@ -112,10 +126,10 @@ export default function CallQueueList({
         <UpdateUserModal
           open={open}
           handleClose={handleClose}
-          selectedUser={selectedUser}
+          // selectedUser={selectedUser}
           currentHours={currentHours}
-          callQueueUsers={callQueueUsers}
-          setCallQueueUsers={setCallQueueUsers}
+          // callQueueUsers={callQueueUsers}
+          // setCallQueueUsers={setCallQueueUsers}
         />
       </Paper>
     </>

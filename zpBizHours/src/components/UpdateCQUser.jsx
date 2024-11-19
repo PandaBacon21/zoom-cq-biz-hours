@@ -1,13 +1,21 @@
 import { Button } from "@mui/material";
 
 import axios from "axios";
+import { useContext } from "react";
+import { CallQueueContext } from "../context/CallQueueContext";
+import { UserContext } from "../context/UserContext";
 
-export default function UpdateCQUser({
-  selectedUser,
-  setSelectedUser,
-  callQueue,
-  setCallQueueUsers,
-}) {
+export default function UpdateCQUser(
+  {
+    // selectedUser,
+    // setSelectedUser,
+    // callQueue,
+    // setCallQueueUsers,
+  }
+) {
+  const { callQueue, setCallQueueUsers } = useContext(CallQueueContext);
+  const { selectedUser, setSelectedUser } = useContext(UserContext);
+
   // call backend to add selecteduser to queue
   const addUser = async () => {
     try {
@@ -23,11 +31,11 @@ export default function UpdateCQUser({
       });
       const users = res.data;
       setCallQueueUsers(users);
-      setSelectedUser(false);
+      setSelectedUser(null);
       // console.log(res.data);
     } catch (e) {
       console.log(e);
-      setSelectedUser(false);
+      setSelectedUser(null);
     }
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Grid2, Paper, Container, Typography, Button } from "@mui/material";
 
 import CallQueueList from "./components/CallQueueList";
@@ -6,20 +6,25 @@ import PickCallQueue from "./components/PickCallQueue";
 import PickUser from "./components/PickUser";
 import UpdateCQUser from "./components/UpdateCQUser";
 import RemoveCQUser from "./components/RemoveCQUser";
+import { CallQueueContext } from "./context/CallQueueContext";
+import { UserContext } from "./context/UserContext";
 
 export default function App() {
   // Need to update these to Context rather than prop drilling all the state
 
-  // Listing and Selecting Call Queues to Show or Interact with
-  const [callQueue, setCallQueue] = useState(); // name, id
-  const [callQueueUsers, setCallQueueUsers] = useState([]); // id, user_id, name, receive_call, extension_id, all_business_hours
+  // // Listing and Selecting Call Queues to Show or Interact with
+  // const [callQueue, setCallQueue] = useState(); // name, id
+  // const [callQueueUsers, setCallQueueUsers] = useState([]); // id, user_id, name, receive_call, extension_id, all_business_hours
 
-  // Listing and Selecting User to Add to Queue
-  const [listZoomUsers, setListZoomUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(false);
+  // // Listing and Selecting User to Add to Queue
+  // const [listZoomUsers, setListZoomUsers] = useState([]);
+  // const [selectedUser, setSelectedUser] = useState(false);
 
-  // Selecting User Currently in Queue to Remove
-  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  // // Selecting User Currently in Queue to Remove
+  // const [rowSelectionModel, setRowSelectionModel] = useState([]);
+
+  const { callQueue } = useContext(CallQueueContext);
+  const { selectedUser, rowSelectionModel } = useContext(UserContext);
 
   return (
     <Container maxWidth="false" sx={{ textAlign: "center" }}>
@@ -43,33 +48,33 @@ export default function App() {
         <Grid2 container spacing={2} direction="row" justifyContent="center">
           {rowSelectionModel.length > 0 ? (
             <RemoveCQUser
-              callQueue={callQueue}
-              callQueueUsers={callQueueUsers}
-              setCallQueueUsers={setCallQueueUsers}
-              rowSelectionModel={rowSelectionModel}
-              setRowSelectionModel={setRowSelectionModel}
+            // callQueue={callQueue}
+            // callQueueUsers={callQueueUsers}
+            // setCallQueueUsers={setCallQueueUsers}
+            // rowSelectionModel={rowSelectionModel}
+            // setRowSelectionModel={setRowSelectionModel}
             />
           ) : null}
           <PickCallQueue
-            setCallQueue={setCallQueue}
-            setCallQueueUsers={setCallQueueUsers}
+          // setCallQueue={setCallQueue}
+          // setCallQueueUsers={setCallQueueUsers}
           />
           {callQueue ? (
             <PickUser
-              callQueue={callQueue}
-              listZoomUsers={listZoomUsers}
-              setListZoomUsers={setListZoomUsers}
-              selectedUser={selectedUser}
-              setSelectedUser={setSelectedUser}
+            // callQueue={callQueue}
+            // listZoomUsers={listZoomUsers}
+            // setListZoomUsers={setListZoomUsers}
+            // selectedUser={selectedUser}
+            // setSelectedUser={setSelectedUser}
             />
           ) : null}
           {selectedUser ? (
             <UpdateCQUser
-              selectedUser={selectedUser}
-              setSelectedUser={setSelectedUser}
-              callQueue={callQueue}
-              setCallQueueUsers={setCallQueueUsers}
-              rowSelectionModel={rowSelectionModel}
+            // selectedUser={selectedUser}
+            // setSelectedUser={setSelectedUser}
+            // callQueue={callQueue}
+            // setCallQueueUsers={setCallQueueUsers}
+            // rowSelectionModel={rowSelectionModel}
             />
           ) : null}
         </Grid2>
@@ -83,11 +88,11 @@ export default function App() {
         >
           {callQueue ? (
             <CallQueueList
-              callQueue={callQueue}
-              callQueueUsers={callQueueUsers}
-              setCallQueueUsers={setCallQueueUsers}
-              rowSelectionModel={rowSelectionModel}
-              setRowSelectionModel={setRowSelectionModel}
+            // callQueue={callQueue}
+            // callQueueUsers={callQueueUsers}
+            // setCallQueueUsers={setCallQueueUsers}
+            // rowSelectionModel={rowSelectionModel}
+            // setRowSelectionModel={setRowSelectionModel}
             />
           ) : null}
         </Grid2>
