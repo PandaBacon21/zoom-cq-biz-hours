@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import {
   Box,
@@ -21,21 +21,16 @@ import {
 } from "../utilities/utilities";
 
 import axios from "axios";
-import { CallQueueContext } from "../context/CallQueueContext";
-import { UserContext } from "../context/UserContext";
 
 dayjs.extend(customParseFormat);
 
 export default function UpdateUserModal({
   open,
   handleClose,
-  // selectedUser,
+  selectedUser,
   currentHours,
-  // callQueueUsers,
+  callQueueUsers,
 }) {
-  const { callQueueUsers } = useContext(CallQueueContext);
-  const { selectedUser } = useContext(UserContext);
-
   const [newHours, setNewHours] = useState(null);
 
   // Send updated hours to the backend to update Zoom

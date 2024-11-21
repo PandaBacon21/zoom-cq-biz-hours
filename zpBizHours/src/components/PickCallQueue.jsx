@@ -13,7 +13,6 @@ import axios from "axios";
 import { CallQueueContext } from "../context/CallQueueContext";
 
 export default function PickCallQueue() {
-  //{ setCallQueue, setCallQueueUsers }
   const { setCallQueue, setCallQueueUsers } = useContext(CallQueueContext);
 
   const [loading, setLoading] = useState(false);

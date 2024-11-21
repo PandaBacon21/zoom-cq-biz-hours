@@ -5,15 +5,7 @@ import { useContext } from "react";
 import { CallQueueContext } from "../context/CallQueueContext";
 import { UserContext } from "../context/UserContext";
 
-export default function RemoveCQUser(
-  {
-    // callQueue,
-    // callQueueUsers,
-    // setCallQueueUsers,
-    // rowSelectionModel,
-    // setRowSelectionModel,
-  }
-) {
+export default function RemoveCQUser() {
   const { callQueue, callQueueUsers, setCallQueueUsers } =
     useContext(CallQueueContext);
   const { rowSelectionModel, setRowSelectionModel } = useContext(UserContext);

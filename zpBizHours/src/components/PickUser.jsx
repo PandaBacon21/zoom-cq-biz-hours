@@ -7,22 +7,13 @@ import {
   Select,
   MenuItem,
   CircularProgress,
-  selectClasses,
 } from "@mui/material";
 
 import axios from "axios";
 import { CallQueueContext } from "../context/CallQueueContext";
 import { UserContext } from "../context/UserContext";
 
-export default function PickUser(
-  {
-    // callQueue,
-    // listZoomUsers,
-    // setListZoomUsers,
-    // selectedUser,
-    // setSelectedUser,
-  }
-) {
+export default function PickUser() {
   const { callQueue } = useContext(CallQueueContext);
   const { listZoomUsers, setListZoomUsers, selectedUser, setSelectedUser } =
     useContext(UserContext);

@@ -11,15 +11,7 @@ import { getTodaysHours } from "../utilities/utilities.js";
 import { CallQueueContext } from "../context/CallQueueContext.jsx";
 import { UserContext } from "../context/UserContext.jsx";
 
-export default function CallQueueList(
-  {
-    // callQueue,
-    // callQueueUsers,
-    // setCallQueueUsers,
-    // rowSelectionModel,
-    // setRowSelectionModel,
-  }
-) {
+export default function CallQueueList() {
   const { callQueue, callQueueUsers, setCallQueueUsers } =
     useContext(CallQueueContext);
   const {
@@ -30,7 +22,6 @@ export default function CallQueueList(
   } = useContext(UserContext);
 
   const [open, setOpen] = useState(false);
-  // const [selectedUser, setSelectedUser] = useState(null);
   const [currentHours, setCurrentHours] = useState(null);
 
   const handleOpen = () => {
@@ -126,10 +117,10 @@ export default function CallQueueList(
         <UpdateUserModal
           open={open}
           handleClose={handleClose}
-          // selectedUser={selectedUser}
+          selectedUser={selectedUser}
           currentHours={currentHours}
-          // callQueueUsers={callQueueUsers}
-          // setCallQueueUsers={setCallQueueUsers}
+          callQueueUsers={callQueueUsers}
+          setCallQueueUsers={setCallQueueUsers}
         />
       </Paper>
     </>

@@ -5,14 +5,7 @@ import { useContext } from "react";
 import { CallQueueContext } from "../context/CallQueueContext";
 import { UserContext } from "../context/UserContext";
 
-export default function UpdateCQUser(
-  {
-    // selectedUser,
-    // setSelectedUser,
-    // callQueue,
-    // setCallQueueUsers,
-  }
-) {
+export default function UpdateCQUser() {
   const { callQueue, setCallQueueUsers } = useContext(CallQueueContext);
   const { selectedUser, setSelectedUser } = useContext(UserContext);
 
